@@ -115,7 +115,7 @@ public class SimpleSample extends ChaincodeBase {
 		System.out.println("Transfer "+fromName+">"+toName+" am='"+am+"' new values='"+valFrom+"','"+ valTo+"'");
 		int saldoBanco = 0;
 		try {
-			int saldoBanco = Integer.parseInt(stub.getState("banco"));
+			saldoBanco = Integer.parseInt(stub.getState("banco"));
 		} catch (Exception e) {
 			System.out.println("Problemas com o saldo do banco.");
 			e.printStackTrace();
