@@ -37,6 +37,12 @@ public class SimpleSample extends ChaincodeBase {
 		switch (function) {
 		case "init":
 			init(stub, function, args);
+
+			String banco = stub.getState("banco");
+			if ((banco == null) || (banco.isEmpty()){
+				stub.putState("banco", "0");
+			}
+
 			break;
 		case "transfer":
 			String re = transfer(stub, args);	
@@ -69,6 +75,7 @@ public class SimpleSample extends ChaincodeBase {
 		String toAm=stub.getState(toName);
 		String am =args[2];
 		int valFrom=0;
+
 		if (fromAm!=null&&!fromAm.isEmpty()){			
 			try{
 				valFrom = Integer.parseInt(fromAm);
@@ -101,13 +108,25 @@ public class SimpleSample extends ChaincodeBase {
 		}		
 		if(valA>valFrom)
 			return "{\"Error\":\"Insufficient asset holding value for requested transfer amount \"}";
-		valFrom = valFrom-valA;
-		valTo = valTo+valA;
+		int taxa = 1;
+		valFrom = valFrom-valA-taxa;
+		valTo = valTo+valA-taxa;
 		System.out.println("Transfer "+fromName+">"+toName+" am='"+am+"' new values='"+valFrom+"','"+ valTo+"'");
-		stub.putState(fromName,""+ valFrom);
-		stub.putState(toName, ""+valTo);		
+		int saldoBanco = 0;
+		try {
+			int saldoBanco = Integer.parseInt(stub.getState("banco"));
+		} catch (Exception e) {
+			System.out.println("Problemas com o saldo do banco.");
+			System.out.println(e.printStackTrace());
+		}
+
+		saldoBanco += taxa;
+		stub.putState(fromName,""+valFrom);
+		stub.putState(toName, ""+valTo);
+		stub.putState("banco", ""+saldoBanco);
 
 		System.out.println("Transfer complete");
+		System.out.println("Saldo da conta do banco: " + saldoBanco);
 
 		return null;
 		
@@ -150,7 +169,7 @@ public class SimpleSample extends ChaincodeBase {
 
 	@Override
 	public String getChaincodeID() {
-		return "Percival";
+		return "marcel";
 	}
 
 	public static void main(String[] args) throws Exception {
