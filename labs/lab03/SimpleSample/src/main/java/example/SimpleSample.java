@@ -39,8 +39,9 @@ public class SimpleSample extends ChaincodeBase {
 			init(stub, function, args);
 
 			String banco = stub.getState("banco");
-			if ((banco == null) || (banco.isEmpty()){
+			if ((banco == null) || banco.isEmpty()){
 				stub.putState("banco", "0");
+				System.out.println("Iniciando conta do banco. Saldo R$ 0,00");
 			}
 
 			break;
