@@ -118,7 +118,7 @@ public class SimpleSample extends ChaincodeBase {
 			int saldoBanco = Integer.parseInt(stub.getState("banco"));
 		} catch (Exception e) {
 			System.out.println("Problemas com o saldo do banco.");
-			System.out.println(e.printStackTrace());
+			e.printStackTrace();
 		}
 
 		saldoBanco += taxa;
